@@ -27,6 +27,14 @@ func Entry(resp http.ResponseWriter, req *http.Request) {
 			// send the err message to front
 			return
 		}
+	case "updateprofile":
+		if req.Method != http.MethodPut {
+			return
+		}
+		if err := usermangment.UpdateUserProfile(req.Body, req); err != nil {
+			// send the err to front please
+			return
+		}
 	case "logout":
 		if req.Method != http.MethodPost {
 			return
@@ -42,7 +50,7 @@ func Entry(resp http.ResponseWriter, req *http.Request) {
 		// then redirect to / or whatever
 	case "auth":
 		cookie, err := req.Cookie("ticket")
-		if err != nil {
+		if err != nil || cookie.Value == "" {
 			// unothorized
 			return
 		}
